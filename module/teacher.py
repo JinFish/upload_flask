@@ -63,6 +63,7 @@ class Teacher:
         db=DB()
         cursor=db.connection()
         mysql="select * from teacher"
+        results=None
 
         try:
             cursor.execute(mysql)
@@ -73,6 +74,22 @@ class Teacher:
 
         db.db.close()
         return results
+
+
+    def queryByid(self,id):
+        db=DB()
+        cursor=db.connection()
+        mysql="select * from teacher where unique_id='%s'" %(id)
+        result=None
+        try:
+            cursor.execute(mysql)
+            result=cursor.fetchone()
+            db.db.commit()
+        except:
+            db.db.rollback()
+
+        db.db.close()
+        return result
 
 
 if __name__ == '__main__':
@@ -88,10 +105,6 @@ if __name__ == '__main__':
     teacher=Teacher(unique_id,name,user_id,password,spare1,spare2,spare3,spare4)
     # teacher.insert()
     results=teacher.query_all()
-    for r in results:
-        name=r[1]
-        user_id=r[2]
-        password=r[0]
-        print("name:",name,"user_id:",user_id,"password:",password)
+    print(results)
 
 
