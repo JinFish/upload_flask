@@ -2,7 +2,7 @@ from module.db import DB
 import uuid
 
 class Teacher:
-    def __init__(self,unique_id,name,user_id,password,spare1,spare2,spare3,spare4):
+    def __init__(self,unique_id="",name="",user_id="",password="",spare1="",spare2="",spare3="",spare4=""):
         self.unique_id=unique_id
         self.name=name
         self.user_id=user_id
@@ -91,20 +91,23 @@ class Teacher:
         db.db.close()
         return result
 
+    def queryByuserid(self,name):
+        db = DB()
+        cursor = db.connection()
+        mysql = "select * from teacher where user_id='%s'" % (name)
+        result = None
+        try:
+            cursor.execute(mysql)
+            result = cursor.fetchone()
+            db.db.commit()
+        except:
+            db.db.rollback()
+
+        db.db.close()
+        return result
+
 
 if __name__ == '__main__':
-    unique_id="1212"
-    name="taiyele"
-    user_id="huang"
-    password="1234567"
-    spare1=""
-    spare2=""
-    spare3=""
-    spare4=""
-
-    teacher=Teacher(unique_id,name,user_id,password,spare1,spare2,spare3,spare4)
-    # teacher.insert()
-    results=teacher.query_all()
-    print(results)
-
-
+    techear=Teacher()
+    r=techear.queryByuserid("huang123")[3]
+    print(r)

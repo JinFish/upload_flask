@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="static/css/bootstrap.css" />
+		<link rel="stylesheet" href="static/css/bootstrap-table.css" />
+		<link rel="stylesheet" href="static/font-awesome-4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="static/css/main_page.css" />
+		<title>后台管理页面</title>
+	</head>
+
+	<body>
+		<div class="container">
+
+			<div class="row">
+				<div class="col-sm-12">
+
+						<div class="col-md-3 col-md-offset-10 welcom" style="font-size:20px;font-weight:bold;margin-top:25px;">
+							<p>欢迎你，{{ teacher.name }}老师！</p>
+						</div>
+					
+						<div class="col-md-4 button_group">
+							<div class="btn-group-sm" id="toolbar" role="group" style="padding-top: 3%">
+								<a class="btn btn-primary" onclick="add()" style="font-size: 15px;">
+									<i class="fa fa-plus"></i> 添加
+								</a>
+
+							</div>
+						</div>
+					
+
+					<div class="col-sm-12">
+						<input style="display: none;"  value="" id="session_name"/>
+						<table id="main_table" class="table table-hover" style="font-size: 20px;">
+
+						</table>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</body>
+
+	<script type="text/javascript" src="static/layui/layui.js"></script>
+	<script type="text/javascript" src="static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="static/js/bootstrap-table.min.js"></script>
+	<script type="text/javascript" src="static/js/bootstrap-table-zh-CN.min.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			$("#main_table").bootstrapTable({
+				pagination: true,
+				method: 'get',
+				type:0,
+				striped: true,
+				url: './test.json',
+				dataType: 'json',
+				pageSize: 10,
+				pageNumber: 1,
+				sidePagination: "server",
+				search:true,
+				sidePagination: "client",
+				
+				
+
+				columns: [
+
+					{
+						field: 'name',
+						align: 'center',
+						title: '课程名称'
+					
+						
+					},
+
+					{
+						field: 'teacher',
+						align: 'center',
+						title: '教师名称'
+					},
+
+					{
+						field: 'course_url',
+						 align: 'center',
+						title: '学生页面路径'
+						
+					},
+					{
+
+						title: '操作',
+						align: 'center',
+						formatter:function(value,row,index)
+						{
+							var e='<a class="btn btn-primary btn-md" style="margin-right:5px" href="#" title="编辑" onclick="editAuthor(\''
+							+row.unique_id+'\')">'
+							+'编辑<a/>';
+							
+							var d='<a class="btn btn-danger btn-md"  style="margin-right:5px" href="#" title="删除" onclick="deleteAuthor(\''
+							+row.unique_id+'\')">'
+							+'删除<a/>';
+							
+							var u='<a class="btn btn-success btn-md" style="margin-right:5px" href="#" title="上传" onclick="uploadAuthor(\''
+							+row.unique_id+'\')">'
+							+'上传<a/>';
+							
+							
+							return e+u+d;
+						}
+					}
+
+				]
+			});
+
+		});
+
+		function add()
+
+		{
+			window.location.href="/add"
+		}
+
+
+
+		
+		
+		
+	</script>
+
+</html>

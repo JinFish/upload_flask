@@ -2,7 +2,7 @@ from module.db import DB
 import uuid
 
 class Course:
-    def __init__(self,unique_id,course_url,name,description,teacher,spare1,spare2,spare3,spare4):
+    def __init__(self,unique_id="",course_url="",name="",description="",teacher="",spare1="",spare2="",spare3="",spare4=""):
         self.unique_id=unique_id
         self.course_url=course_url
         self.name=name
@@ -22,6 +22,7 @@ class Course:
         mysql="insert into course(unique_id,course_url,name,description,teacher,spare1,spare2,spare3,spare4)" \
               " values('%s','%s','%s','%s','%s','%s','%s','%s','%s')"\
               %(self.unique_id,self.course_url,self.name,self.description,self.teacher,self.spare1,self.spare2,self.spare3,self.spare4)
+        print(mysql)
         try:
         # 执行sql语句
             cursor.execute(mysql)
@@ -91,21 +92,26 @@ class Course:
         db.db.close()
         return result
 
+    def queryByurl(self,url):
+        db=DB()
+        cursor=db.connection()
+        mysql="select * from course where course_url='%s'" %(url)
+        result=None
+        try:
+            cursor.execute(mysql)
+            result=cursor.fetchone()
+            db.db.commit()
+        except:
+            db.db.rollback()
+
+        db.db.close()
+        return result
+
 
 if __name__ == '__main__':
 
-    unique_id='859af6cc-04a4-11eb-9435-3413e89fe484'
-    course_url="internet_network"
-    name="network基础"
-    description="这是一个非常简答且基础的网络课程"
-    teacher=""
-    spare1=""
-    spare2=""
-    spare3=""
-    spare4=""
-    course=Course(unique_id,course_url,name,description,teacher,spare1,spare2,spare3,spare4)
-
-    r=course.queryByid('859af6cc-04a4-11eb-9435-3413e89fe484')
+    course=Course()
+    r=course.queryByurl("python_base")
     print(r)
 
 

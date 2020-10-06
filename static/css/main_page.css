@@ -1,0 +1,14 @@
+.button_group{
+	margin-top: 150px;
+	margin-bottom: 10px;
+}
+
+
+.search_input{
+	border-radius: 20px;
+}
+
+.welcome{
+    font-size:20px;
+    font-weight:bold;
+}

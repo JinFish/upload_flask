@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+	
+		<title></title>
+
+		<link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
+		<style>
+
+		</style>
+	</head>
+	<body>
+		
+		<div class="container">
+	<div class="loginBox">
+		<div class="userImage">
+			<img src="{{ url_for('static', filename='img/bert_face.png') }}">
+		</div>
+		<form id="loginForm">
+			<div class="input-wrapper" style="margin-top: 45px;">
+				<label>用户名:</label>
+				<input  name="user_name" id="user_name" placeholder="请输入用户名" >
+				<p class="error-user" style="padding-left: 4px;"></p>
+			</div>
+			<div class="input-wrapper" style="margin-top: 20px;">
+				<label>密码:</label>
+				<input type="password" id="password" name="password" placeholder="密码">
+				<p class="error-password" style="padding-left: 4px;"></p>
+			</div>
+			<input type="button" id="login" value="登录">
+		</form>
+	</div>
+</div>
+		
+		
+		
+		
+	</body>
+</html>
+
+<script type="text/javascript" src="{{ url_for('static', filename='layui/layui.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+<script type="text/javascript">
+$("#user_name").blur(function(){
+	user_name=$("#user_name").val()
+	console.log(user_name)
+	pattern=/^[a-zA-Z0-9]{4,16}$/
+	console.log(pattern.test(user_name));
+	if(pattern.test(user_name)==false)
+	{
+		$(".error-user").css("display","block");
+		$(".error-user").text("请输入正确的格式（由4-16位大小写字母、数字组成）");
+	}
+	
+	else
+	{
+		$(".error-user").css("display","none");
+	}
+});
+
+$("#password").blur(function(){
+	password=$("#password").val()
+	console.log(password)
+	pattern=/^[a-zA-Z0-9\.\_\$\#\@!@$%&^\*]{6,16}$/
+	console.log(pattern.test(password));
+	if(pattern.test(password)==false)
+	{
+		$(".error-password").css("display","block");
+		$(".error-password").text("请输入正确的格式(由6到16位大小写字母，数字或 .!@#$%^&* 等特殊符号组成)");
+	}
+	
+	else
+	{
+		$(".error-password").css("display","none");
+	}
+});
+
+
+
+$("#login").click(function(){
+	var user_name=$('#user_name').val();
+	var password=$('#password').val();
+	console.log(user_name);
+	console.log(password);
+	$.ajax({
+		type:"get",
+		url:"/valid",
+		data:{
+			  "user_name":user_name,
+			  "password":password
+			  },
+
+		success:function(msg){
+			layui.use("layer",function(){
+				console.log(msg);
+				layer=layui.layer;
+				if(msg["result"]!=true)
+				{
+					layer.alert(msg["result"]);
+				}
+
+				else
+				{
+					window.location.href="/background";
+
+				}
+
+			});
+
+		}
+
+
+	});
+});
+
+	
+
+	
+</script>
+
