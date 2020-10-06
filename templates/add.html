@@ -2,10 +2,10 @@
 <html>
 	<head>
 		<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="static/css/bootstrap.css" />
-		<link rel="stylesheet" href="static/css/bootstrap-table.css" />
-		<link rel="stylesheet" href="static/font-awesome-4.7.0/css/font-awesome.min.css" />
-		<link rel="stylesheet" href="static/css/add.css" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-table.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/add.css') }}" />
 		<title>添加信息</title>
 		
 		
@@ -48,16 +48,18 @@
 						
 						
 						<div class="form-group">
-							
+							<input id="course_id"  name ="course_id" {% if course.unique_id %}value={{course.unique_id}} {% endif%} style="display:none"/>
+							<input id="teacher_id"  name ="teacher_id" {% if course.teacher %}value={{course.teacher}} {% endif%} style="display:none"/>
+
 							<label class="col-sm-2 control-label">学生页面路径(必填)</label>
 							<div class="col-sm-4">
-								<input id="course_url" class="form-control" name="course_url" {% if course %}value={{course.url}} {% endif%} />
+								<input id="course_url" class="form-control" name="course_url" {% if course.course_url %} value={{course.course_url}} {% endif %}/>
 								<span class="error_url">该路径已存在</span>
 							</div>
 							
 							<label class="col-sm-2 control-label">课程名称(必填)</label>
 							<div class="col-sm-4">
-								<input id="course_name" class="form-control" name="course_name" {% if course %} value={{course.name}} {% endif%} />
+								<input id="course_name" class="form-control" name="course_name" {% if course.name %} value={{course.name}} {% endif %} />
 								<span class="error_name">该名称不合法</span>
 							</div>
 							
@@ -68,17 +70,11 @@
 							
 							<label class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10">
-								<div  class="col-md-12" id="description_copy"  contenteditable="true">
 
-								</div>
-								
-								<textarea id="course_description" class="form-control" name="course_description" style="display: none;">
-									{% if course %}
 
-										{{ course.description }}
-									{% endif %}
-									
-								</textarea>
+
+								<textarea id="course_description" class="form-control col-md-12" name="course_description"
+								style="height:700px;overflow-y:scroll">{% if course.description %}{{ course.description }}{% endif %}</textarea>
 							</div>
 							
 						</div>
@@ -105,9 +101,9 @@
 		
 	</body>
 	
-	<script type="text/javascript" src="static/layui/layui.js"></script>
-	<script type="text/javascript" src="static/js/jquery.min.js"></script>
-	<script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 	
 	<script>
 		var url_flag=1
@@ -115,9 +111,9 @@
 
 
 		$(document).ready(function(){
-			{% if course %}
-				$("#description_copy").text($("#course_description").text());
-			{% endif%}
+
+				$('#course_name').blur();
+				$('#course_url').blur();
 
 
 		}
@@ -146,15 +142,19 @@
 		else
 		{
 			console.log("aadfdsf");
-			$("#course_description").text($("#description_copy").text());
-			console.log($('#course_description').text());
 
+
+
+			var course_id=$('#course_id').val();
+			var teacher_id=$('#teacher_id').val();
 			var course_url=$('#course_url').val();
 			var course_name=$('#course_name').val();
-			var course_description=$('#course_description').text();
+			var course_description=$('#course_description').val();
 
 			var course_data={
 					"data":JSON.stringify({
+					"course_id":course_id,
+					"teacher_id":teacher_id,
 					"course_url":course_url,
 					"course_name":course_name,
 					"course_description":course_description
@@ -173,8 +173,12 @@
 
 					layui.use('layer',function(){
 					layer=layui.layer;
-					parent.layer.alert('提交成功');
-					window.location.reload();
+					parent.layer.msg('提交成功');
+					window.location.href="/edit/"+course_id;
+
+
+
+
 
 												});
 
@@ -183,14 +187,18 @@
 				error:function(msg){
 					layui.use('layer',function(){
 						layer=layui.layer;
-						parent.layer.alert('未知错误，提交失败');
+						parent.layer.msg('未知错误，提交失败');
 						window.location.reload();
 												});
 				}
 
 
+
+
 					});
+
 		}
+		return false;
 
 	});
 
@@ -212,7 +220,8 @@
 				method:'get',
 				url:'/uniqueurl',
 				data:{
-				"course_url":$('#course_url').val()
+				"course_url":$('#course_url').val(),
+				"course_id":$('#course_id').val()
 				},
 				success:function(msg){
 

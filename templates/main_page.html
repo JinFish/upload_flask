@@ -57,7 +57,7 @@
 				method: 'get',
 				type:0,
 				striped: true,
-				url: './test.json',
+				url: '/loadtable',
 				dataType: 'json',
 				pageSize: 10,
 				pageNumber: 1,
@@ -120,7 +120,57 @@
 		function add()
 
 		{
-			window.location.href="/add"
+			layui.use('layer',function(){
+
+				var index = layer.open({
+        	type: 2,
+        	title: '添加',
+        	maxmin: true,
+        	end:function () {
+        				parent.location.reload()
+    				},
+        	shadeClose: false, // 点击遮罩关闭层
+        	area: ['800px', '520px'],
+        	content: '/add' // iframe的url
+    								});
+   		 	layer.full(index);
+			});
+
+		}
+
+
+		function editAuthor(id)
+		{
+			layui.use('layer',function(){
+
+				var index = layer.open({
+        	type: 2,
+        	title: '添加',
+        	maxmin: true,
+        	shadeClose: false, // 点击遮罩关闭层
+        	area: ['800px', '520px'],
+        	content: '/edit/'+id // iframe的url
+    								});
+   		 	layer.full(index);
+			});
+
+		}
+
+		function editAuthor(id)
+		{
+			layui.use('layer',function(){
+
+				var index = layer.open({
+        	type: 2,
+        	title: '上传',
+        	maxmin: true,
+        	shadeClose: false, // 点击遮罩关闭层
+        	area: ['800px', '520px'],
+        	content: '/upload/'+id // iframe的url
+    								});
+   		 	layer.full(index);
+			});
+
 		}
 
 

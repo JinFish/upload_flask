@@ -76,6 +76,23 @@ class Course:
         db.db.close()
         return results
 
+    def query_allByteacher(self,teacher):
+        db = DB()
+        cursor = db.connection()
+        print("teacher:",teacher)
+        mysql = "select * from course where teacher='%s'"%(teacher)
+        results=None
+
+        try:
+            cursor.execute(mysql)
+            results = cursor.fetchall()
+            db.db.commit()
+        except:
+            db.db.rollback()
+
+        db.db.close()
+        return results
+
 
     def queryByid(self,id):
         db=DB()
@@ -111,7 +128,7 @@ class Course:
 if __name__ == '__main__':
 
     course=Course()
-    r=course.queryByurl("python_base")
+    r=course.query_allByteacher('09142e40-0494-11eb-a91c-3413e89fe484')
     print(r)
 
 

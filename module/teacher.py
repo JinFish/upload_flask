@@ -91,6 +91,21 @@ class Teacher:
         db.db.close()
         return result
 
+    def queryidByuser(self,id):
+        db=DB()
+        cursor=db.connection()
+        mysql="select * from teacher where user_id='%s'" %(id)
+        result=None
+        try:
+            cursor.execute(mysql)
+            result=cursor.fetchone()
+            db.db.commit()
+        except:
+            db.db.rollback()
+
+        db.db.close()
+        return result
+
     def queryByuserid(self,name):
         db = DB()
         cursor = db.connection()

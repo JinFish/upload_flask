@@ -34,3 +34,8 @@
 	margin-top: 15px;
     display: none;
 }
+
+#course_description{
+    height:700px;
+    overflow-y:scroll;
+}
