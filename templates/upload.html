@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>文件上传</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}" media="all" />
+
+</head>
+<body class="main_body">
+	<div style="
+    margin-top: 50px;
+    margin-bottom: 30px;
+    margin-left: 10px;">
+
+		<input type="hidden" name="cid" id="cid" {% if cid %} value="{{cid}}" {% endif %} />
+
+		<button type="button" class="layui-btn" id="upfile">上传文件</button>
+		<button type="button" class="layui-btn" id="commit">上传</button>
+	</div>
+
+
+	<div>
+		<table id="filesList" lay-filter="filesList"></table>
+	</div>
+
+
+	<!--操作-->
+	<script type="text/html" id="filesListBar">
+		<a class="layui-btn layui-btn-xs" lay-event="down">下载</a>
+		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+	</script>
+
+	<script type="text/javascript" src="{{ url_for('static', filename='layui/layui.js') }}" ></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}" ></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+	<script type="text/javascript">
+		layui.use(['upload', 'jquery', 'table'], function(){
+			var upload = layui.upload;
+			var $ = layui.$;
+			var table = layui.table;
+			
+			var tableInst = table.render({
+				elem: '#filesList',
+				url: '/api/show',
+				method: 'post',
+				cellMinWidth : 95,
+				page : true,
+				height : "full-125",
+				limit : 10,
+				limits : [10,15,20,25],
+				id : "filesListTable",
+				cols : [[
+					{field: 'fid', title: 'ID', width:60, align:"center", hide:true},
+					{field: 'fname', title: '文件名', width:350},
+					{field: 'ftime', title: '上传时间', align:'center'},
+					{title: '操作', width:170, templet:'#filesListBar',fixed:"right",align:"center"}
+				]],
+				where: {
+					cid: function(){
+						return $('#cid').val();
+					}
+
+				},
+			});
+			
+			table.on('tool(filesList)', function(obj){
+				var layEvent = obj.event,
+					data = obj.data;
+				
+				if(layEvent === 'down'){
+					window.open('/download?fid='+data.fid, 'download', 'download target="_blank"');
+				}else if(layEvent === 'del'){
+					layer.confirm('确定删除此文件？',{icon:3, title:'提示信息'},function(index){
+						$.post('/api/delete',{
+							fid : data.fid
+						}, function(data){
+							tableInst.reload();
+							layer.close(index);
+						})
+					});
+				}
+				
+			})
+			
+			var uploadInst = upload.render({
+				elem: '#upfile',
+				url: '/api/upload',
+				field: 'myfile',
+				accept: 'file',
+				auto: false,
+				bindAction: '#commit',
+				progress: function(n, elem){
+    				var percent = n + '%'; //获取进度百分比
+    				console.log(percent);
+    				},
+				data: {
+
+					cid: function(){
+						return $('#cid').val();
+					}
+
+				},
+				done: function(res, index, upload){
+					if(res.code == 0){
+						tableInst.reload("filesListTable",{
+							where: {
+
+								cid: function(){
+									return $('#cid').val();
+								}
+							},
+							}
+						);
+					}
+				}
+			});
+			
+		});
+		
+	</script>
+</body>
+</html>

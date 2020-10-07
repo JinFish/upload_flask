@@ -156,7 +156,7 @@
 
 		}
 
-		function editAuthor(id)
+		function uploadAuthor(id)
 		{
 			layui.use('layer',function(){
 
@@ -173,6 +173,21 @@
 
 		}
 
+
+		function deleteAuthor(id)
+		{
+			$.ajax({
+				method:'get',
+				url:'deletecourse/'+id,
+				dataType:'json',
+				success:function()
+				{
+					console.log('ok');
+				}
+
+			});
+
+		}
 
 
 		

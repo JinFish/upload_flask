@@ -12,7 +12,7 @@ class DB:
 
 
     def connection(self):
-        self.db=pymysql.connect(self.address,self.username,self.password,self.database)
+        self.db=pymysql.connect(self.address,self.username,self.password,self.database,use_unicode=True,charset='utf8')
         self.cursor=self.db.cursor()
 
         return self.cursor
