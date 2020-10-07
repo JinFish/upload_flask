@@ -56,6 +56,8 @@
 
 
 
+
+
 			$("#main_table").bootstrapTable({
 				pagination: true,
 				method: 'get',
@@ -163,6 +165,7 @@
 		function uploadAuthor(id)
 		{
 			layui.use('layer',function(){
+			var layer=layui.layer;
 
 				var index = layer.open({
         	type: 2,
@@ -171,12 +174,12 @@
         	shadeClose: false, // 点击遮罩关闭层
 			offset:'t',
 			scrollbar:false,
-        	area: ['80%', '80%'],
-        	success: function(layer, index) {
-        layer.iframeAuto(index);
-    },
+        	area: ['1000px', '80%'],
+
         	content: '/upload/'+id // iframe的url
     								});
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.iframeAuto(index);
 
 
 			});
