@@ -36,6 +36,8 @@
 
 						</table>
 					</div>
+
+					<a id="parenta" hidden></a>
 				</div>
 			</div>
 
@@ -51,6 +53,8 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+
+
 
 			$("#main_table").bootstrapTable({
 				pagination: true,
@@ -163,12 +167,18 @@
 				var index = layer.open({
         	type: 2,
         	title: '上传',
-        	maxmin: true,
+        	<!--maxmin: true,-->
         	shadeClose: false, // 点击遮罩关闭层
-        	area: ['800px', '520px'],
+			offset:'t',
+			scrollbar:false,
+        	area: ['80%', '80%'],
+        	success: function(layer, index) {
+        layer.iframeAuto(index);
+    },
         	content: '/upload/'+id // iframe的url
     								});
-   		 	layer.full(index);
+
+
 			});
 
 		}
@@ -182,7 +192,7 @@
 				dataType:'json',
 				success:function()
 				{
-					console.log('ok');
+					window.location.reload();
 				}
 
 			});

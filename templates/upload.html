@@ -16,10 +16,12 @@
 
 		<button type="button" class="layui-btn" id="upfile">上传文件</button>
 		<button type="button" class="layui-btn" id="commit">上传</button>
+		<span id="upload_progress" style="font-size:20px;font-weight:600"></span>
 	</div>
 
 
-	<div>
+
+	<div >
 		<table id="filesList" lay-filter="filesList"></table>
 	</div>
 
@@ -35,6 +37,11 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
 	<script type="text/javascript">
+
+
+
+
+
 		layui.use(['upload', 'jquery', 'table'], function(){
 			var upload = layui.upload;
 			var $ = layui.$;
@@ -69,7 +76,12 @@
 					data = obj.data;
 				
 				if(layEvent === 'down'){
-					window.open('/download?fid='+data.fid, 'download', 'download target="_blank"');
+
+
+					parent.window.location.href='/download?fid='+data.fid;
+
+
+
 				}else if(layEvent === 'del'){
 					layer.confirm('确定删除此文件？',{icon:3, title:'提示信息'},function(index){
 						$.post('/api/delete',{
@@ -91,8 +103,13 @@
 				auto: false,
 				bindAction: '#commit',
 				progress: function(n, elem){
-    				var percent = n + '%'; //获取进度百分比
-    				console.log(percent);
+    				var percent ='正在上传'+ n + '%'; //获取进度百分比
+    				$('#upload_progress').text(percent);
+    				if(n==100)
+    				{
+    					$('#upload_progress').text("上传完成");
+    				}
+
     				},
 				data: {
 

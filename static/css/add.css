@@ -36,6 +36,7 @@
 }
 
 #course_description{
+    font-size:25px;
     height:700px;
     overflow-y:scroll;
 }

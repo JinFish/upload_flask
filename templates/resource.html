@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>文件上传</title>
+		<link rel="stylesheet" href="{{ url_for('static',filename='layui/css/layui.css') }}" media="all" />
+		<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static',filename='css/resource.css') }}" />
+		
+	</head>
+
+	<body class="main_body">
+		<div style="
+    margin-top: 50px;
+    margin-bottom: 30px;
+    margin-left: 10px;">
+
+			<input type="hidden" name="cid" id="cid" {% if course.unique_id %} value="{{course.unique_id}}" {% endif %} />
+
+		</div>
+
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-3"></div>
+						<div class="col-sm-9  course_title">
+							<h1 style="text-align: center;">{% if course.name%}{{ course.name }}{%endif%}</h1>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-12">
+							<hr />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-3 course_teacher">
+							教师名称：
+						</div>
+
+						<div class="col-sm-9 course_teacher_name" style="text-align: center;">
+							{% if teachername%}{{ teachername }}{%endif%}
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<hr />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-3 course_description">
+							课程描述：
+						</div>
+						<div class="col-sm-9" style="height: 350px;overflow: hidden;">
+							<div class="row">
+								<div id="description_copy" hidden>
+									{% if course.description%}
+
+
+									{{ course.description }}
+
+
+								{%endif%}
+								</div>
+
+								<div  class="col-sm-12 course_description_text" id="course_description_text">
+
+							</div>
+							</div>
+							
+						</div>
+						
+					</div>
+					
+					<div class="row">
+						<div class="col-sm-12 split_box">
+							<hr />
+						</div>
+					</div>
+					
+					
+					<div class="row">
+						<div class="col-sm-12 file_text">
+							<p>文件下载</p>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-12">
+							<table id="filesList" lay-filter="filesList">
+							</table>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<!--操作-->
+		<script type="text/html" id="filesListBar">
+			<a class="layui-btn layui-btn-xs" lay-event="down">下载</a>
+
+		</script>
+
+		<script type="text/javascript" src='{{ url_for("static",filename="layui/layui.js") }}'></script>
+		<script type="text/javascript" src='{{ url_for("static",filename="js/jquery.min.js") }}'></script>
+		<script type="text/javascript" src='{{ url_for("static",filename="js/bootstrap.min.js") }}'></script>
+
+		<script type="text/javascript">
+		$(document).ready(function(){
+
+				$('#course_description_text').html($('#description_copy').text());
+		});
+
+
+
+
+			layui.use(['upload', 'jquery', 'table'], function() {
+				var upload = layui.upload;
+				var $ = layui.$;
+				var table = layui.table;
+
+				var tableInst = table.render({
+					elem: '#filesList',
+					url: '/api/show',
+					method: 'post',
+					cellMinWidth: 95,
+					page: true,
+					height: "full-125",
+					limit: 10,
+					limits: [10, 15, 20, 25],
+					id: "filesListTable",
+					cols: [
+						[{
+								field: 'fid',
+								title: 'ID',
+								width: 60,
+								align: "center",
+								hide: true
+							},
+							{
+								field: 'fname',
+								title: '文件名',
+								width: 350
+							},
+							{
+								field: 'ftime',
+								title: '上传时间',
+								align: 'center'
+							},
+							{
+								title: '操作',
+								width: 170,
+								templet: '#filesListBar',
+								fixed: "right",
+								align: "center"
+							}
+						]
+					],
+					where: {
+						cid: function() {
+							return $('#cid').val();
+						}
+
+					},
+				});
+
+				table.on('tool(filesList)', function(obj) {
+					var layEvent = obj.event,
+						data = obj.data;
+
+					if(layEvent === 'down') {
+
+						parent.window.location.href = '/download?fid=' + data.fid;
+
+					}
+
+				})
+
+			});
+		</script>
+	</body>
+
+</html>

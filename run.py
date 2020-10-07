@@ -278,8 +278,8 @@ def api_upload():
     cid = request.form.get("cid")
     #通过cid获得课程名称
     course=Course().queryByid(cid)
-    cname = course[2]
-    cdir = teacher_id + '/' + cname
+
+    cdir =  cid
 
     file_dir = os.path.join(basedir, cdir)  # 拼接成合法文件夹地址
     file_dir=file_dir.replace('\\','/')
@@ -380,3 +380,18 @@ def api_delete():
     return jsonify({"code": 0, "msg": "删除成功"})
 
 
+#学生
+@app.route('/resource/<curl>')
+def resource(curl):
+    info=Course().queryByurl(curl)
+    if(info==None):
+        return "该路径不存在！"
+
+    course=Course(*info)
+    teacher_id=course.teacher
+    teacher=Teacher().queryByid(teacher_id)
+    teacher_name=teacher[1]
+
+
+
+    return render_template('resource.html',course=course,teachername=teacher_name)
