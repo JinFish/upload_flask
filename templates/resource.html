@@ -142,29 +142,46 @@
 						[{
 								field: 'fid',
 								title: 'ID',
-								width: 60,
+
 								align: "center",
 								hide: true
 							},
 							{
 								field: 'fname',
 								title: '文件名',
-								width: 350
+								width: 550
 							},
+							<!--{-->
+								<!--field: 'ftime',-->
+								<!--title: '上传时间',-->
+								<!--align: 'center'-->
+							<!--},-->
+
 							{
-								field: 'ftime',
-								title: '上传时间',
-								align: 'center'
+								field:'wno',
+
+								title:'周次',
+								align:'center',
+								templet:function(d){
+									return '<span>第'+d.wno+'周</span>';
+								}
+
 							},
+
 							{
 								title: '操作',
-								width: 170,
+								width: 230,
 								templet: '#filesListBar',
 								fixed: "right",
 								align: "center"
 							}
 						]
 					],
+					initSort:{
+						field:'wno',
+						type:'desc'
+					},
+
 					where: {
 						cid: function() {
 							return $('#cid').val();

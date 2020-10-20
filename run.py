@@ -235,7 +235,8 @@ def api_show():
                     "fname": "",
                     "furl": "",
                     "fcid": "",
-                    "ftime": ""}
+                    "ftime": "",
+                    "wno":""}
 
         for key, value in zip(data_row, row):
 
@@ -269,6 +270,9 @@ def api_upload():
     if ("user_id" not in session):
         return "请访问/login进行登录。"
 
+    if (request.form.get('flag')==1):
+        return jsonify({'code':1,'msg':'上传失败'})
+
     #获取教师的id,通过user_id
     teacher_id=Teacher().queryidByuser(session["user_id"])[0]
 
@@ -286,6 +290,7 @@ def api_upload():
         os.makedirs(file_dir)  # 文件夹不存在就创建
 
     f = request.files['myfile']  # 从表单的file字段获取文件，myfile为该表单的name值
+    wno=request.form.get('wno')
     if f and allowed_file(f.filename):  # 判断是否是允许上传的文件类型
         fname = f.filename
         print("fname:",fname)
@@ -301,7 +306,7 @@ def api_upload():
         spare4 = ""
 
         # 插入数据库
-        newfile = File(uid, fname, file_path, cid, uptime, spare1, spare2, spare3, spare4)
+        newfile = File(uid, fname, file_path, cid, uptime, wno, spare2, spare3, spare4)
         print("newfile:",newfile)
         newfile.insert();
 
@@ -380,7 +385,7 @@ def api_delete():
 
 
 #学生
-@app.route('/resource/<curl>')
+@app.route('/course/<curl>')
 def resource(curl):
     info=Course().queryByurl(curl)
     if(info==None):

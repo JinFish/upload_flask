@@ -4,14 +4,14 @@ import time
 
 
 class File:
-    def __init__(self, unique_id="", file_name="", file_url="", course_id="", upload_time="", spare1="", spare2="", spare3="",
+    def __init__(self, unique_id="", file_name="", file_url="", course_id="", upload_time="", week_no="", spare2="", spare3="",
                  spare4=""):
         self.unique_id = unique_id
         self.file_name = file_name
         self.file_url = file_url
         self.course_id = course_id
         self.upload_time = upload_time
-        self.spare1 = spare1
+        self.week_no = week_no
         self.spare2 = spare2
         self.spare3 = spare3
         self.spare4 = spare4
@@ -21,9 +21,9 @@ class File:
         db = DB()
         # 获取cursor
         cursor = db.connection()
-        mysql = "insert into file(unique_id,file_name,file_url,course_id,upload_time,spare1,spare2,spare3,spare4)" \
+        mysql = "insert into file(unique_id,file_name,file_url,course_id,upload_time,week_no,spare2,spare3,spare4)" \
                 " values('%s','%s','%s','%s','%s','%s','%s','%s','%s')" \
-                % (self.unique_id, self.file_name, self.file_url, self.course_id, self.upload_time, self.spare1,
+                % (self.unique_id, self.file_name, self.file_url, self.course_id, self.upload_time, self.week_no,
                    self.spare2, self.spare3, self.spare4)
         print("Mysql:",mysql)
         try:
@@ -39,10 +39,10 @@ class File:
     def update(self):
         db = DB()
         cursor = db.connection()
-        mysql = "update file set file_name='%s',file_url='%s',course_id='%s',upload_time='%s',spare1='%s',spare2='%s',\
+        mysql = "update file set file_name='%s',file_url='%s',course_id='%s',upload_time='%s',week_no='%s',spare2='%s',\
         spare3='%s',spare4='%s' where unique_id='%s'" % (
         self.file_name, self.file_url, self.course_id, self.upload_time,
-        self.spare1, self.spare2, self.spare3, self.spare4, self.unique_id)
+        self.week_no, self.spare2, self.spare3, self.spare4, self.unique_id)
 
         try:
             cursor.execute(mysql)
@@ -147,11 +147,11 @@ if __name__ == '__main__':
     file_url = "e:/upload/" + str(unique_id)
     course_id = "3232"
     upload_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    spare1 = ""
+    week_no = ""
     spare2 = ""
     spare3 = ""
     spare4 = ""
-    file = File(unique_id, file_name, file_url, course_id, upload_time, spare1, spare2, spare3, spare4)
+    file = File(unique_id, file_name, file_url, course_id, upload_time, week_no, spare2, spare3, spare4)
 
     r = file.queryByid(unique_id)
     print(r)

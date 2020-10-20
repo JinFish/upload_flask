@@ -17,6 +17,10 @@
 		<button type="button" class="layui-btn" id="upfile">上传文件</button>
 		<button type="button" class="layui-btn" id="commit">上传</button>
 		<span id="upload_progress" style="font-size:20px;font-weight:600"></span>
+
+		<label>当前周次</label>
+		<input id="wno" style="width:35px;" name="week_no"/>
+		<span id="error_no" class="error_no"></span>
 	</div>
 
 
@@ -46,6 +50,24 @@
 			var upload = layui.upload;
 			var $ = layui.$;
 			var table = layui.table;
+
+			var week_flag=1;
+			$('#wno').blur(function(){
+				var pattern=/^\d{1,3}$/
+				if(pattern.test($('#wno').val())==false)
+				{
+					week_flag=1;
+					$('#error_no').html('格式不符合要求');
+					$('#error_no').css('color','red');
+				}
+
+				else
+				{
+					week_flag=0;
+					$('#error_no').html("");
+				}
+
+			});
 			
 			var tableInst = table.render({
 				elem: '#filesList',
@@ -60,9 +82,16 @@
 				cols : [[
 					{field: 'fid', title: 'ID', width:60, align:"center", hide:true},
 					{field: 'fname', title: '文件名', width:350},
-					{field: 'ftime', title: '上传时间', align:'center'},
+					{field:'wno',width:170,title:'周次',align:'center',templet:function(d){
+						return '<span>第'+d.wno+'周</span>';
+					}},
+					<!--{field: 'ftime', title: '上传时间', align:'center'},-->
 					{title: '操作', width:170, templet:'#filesListBar',fixed:"right",align:"center"}
 				]],
+				initSort:{
+					field:'wno',
+					type:'desc'
+				},
 				where: {
 					cid: function(){
 						return $('#cid').val();
@@ -115,6 +144,12 @@
 
 					cid: function(){
 						return $('#cid').val();
+					},
+					wno: function(){
+						return $('#wno').val();
+					},
+					flag:function(){
+						return week_flag==1?1:0
 					}
 
 				},
@@ -129,6 +164,10 @@
 							},
 							}
 						);
+					}
+
+					else{
+						$('#upload_progress').text('上传失败');
 					}
 				}
 			});
